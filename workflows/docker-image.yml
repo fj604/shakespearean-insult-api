@@ -1,0 +1,30 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: self-hosted
+
+    env:
+      APP_NAME: flask-service
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag ${{ env.APP_NAME }}:latest
+  
+    - name: Stop and remove old container
+      run: |
+        docker stop ${{ env.APP_NAME }} || true
+        docker rm ${{ env.APP_NAME }} || true
+
+    - name: Run new container
+      run: |
+        docker run -d --name ${{ env.APP_NAME }} --restart unless-stopped -p 5000:5000 ${{ env.APP_NAME }}:latest
