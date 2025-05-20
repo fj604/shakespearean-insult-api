@@ -3,7 +3,6 @@ from flask import Flask, send_file, Response, send_from_directory
 from flask_cors import CORS
 import openai
 import io
-import os
 
 app = Flask(__name__)
 CORS(app)
