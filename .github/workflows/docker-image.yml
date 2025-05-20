@@ -20,6 +20,18 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Run tests
+      run: pytest
+
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag ${{ env.APP_NAME }}:latest
   

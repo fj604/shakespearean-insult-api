@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Shakespearean Insults</title>
+    <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'IM Fell English', Garamond, 'Times New Roman', serif;
+            background: #f5f5f5;
+            width: 100vw;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            min-width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .center-btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .big-btn {
+            border: none;
+            background: #fff;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+            cursor: pointer;
+            transition: box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 80vw;
+            height: 80vh;
+            max-width: 800px;
+            max-height: 800px;
+            min-width: 240px;
+            min-height: 240px;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        .big-btn:hover {
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+        }
+
+        .big-btn img {
+            position: absolute;
+            top: 5%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: auto;
+            height: 65%;
+            max-height: 650px;
+            object-fit: contain;
+            margin: 0;
+        }
+
+        .big-btn span {
+            display: block;
+            margin-top: auto;
+            padding-top: calc(85% + 40px);
+            font-size: clamp(3rem, 6vw, 4.5rem);
+            font-family: 'IM Fell English', Garamond, 'Times New Roman', serif;
+            font-style: italic;
+            line-height: 1.1;
+            letter-spacing: 0.02em;
+            text-align: center;
+            word-break: break-word;
+            padding: 0 10px;
+            color: #333333;
+        }
+
+        @media (max-width: 600px), (max-height: 600px) {
+            .big-btn {
+                padding: 15px;
+                width: 95vw;
+                height: 70vh;
+                min-width: 0;
+                min-height: 0;
+            }
+            .big-btn img {
+                top: 4%;
+                height: 60%;
+            }
+            .big-btn span {
+                padding-top: calc(75% + 25px);
+                font-size: 2.6rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="center-btn">
+        <button class="big-btn" type="button">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Hw-shakespeare.png/640px-Hw-shakespeare.png"
+                alt="Shakespeare">
+            <span>Darest thou presume to click upon my person?</span>
+        </button>
+    </div>
+    <script>
+        const button = document.querySelector('.big-btn');
+        const messageSpan = button.querySelector('span');
+        let audio = null;
+
+        button.addEventListener('click', async () => {
+            // Show ellipsis while loading
+            messageSpan.textContent = '...';
+            try {
+                const response = await fetch('/audio');
+                if (!response.ok) throw new Error('Network response was not ok');
+                // Get custom header (e.g., X-Insult-Text)
+                const insultText = response.headers.get('X-Insult-Text') || 'Insult delivered!';
+                const audioBlob = await response.blob();
+                // Update message
+                messageSpan.textContent = insultText;
+                // Play audio
+                if (audio) audio.pause();
+                audio = new Audio(URL.createObjectURL(audioBlob));
+                audio.play();
+            } catch (err) {
+                messageSpan.textContent = 'Failed to fetch insult.';
+            }
+        });
+    </script>
+</body>
+
+</html>
