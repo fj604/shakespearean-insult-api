@@ -3,124 +3,239 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shakespearean Insults</title>
     <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
     <style>
-        html, body {
-            height: 100%;
+        :root {
+            --primary-bg: #f8f5e6;
+            --card-bg: #ffffff;
+            --text-color: #2a2a2a;
+            --accent-color: #8b6d3f;
+            --shadow-color: rgba(0, 0, 0, 0.15);
+            --card-radius: 16px;
+            --transition-speed: 0.3s;
+        }
+        
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
+        }
+        
+        html, body {
+            height: 100%;
+            width: 100%;
             font-family: 'IM Fell English', Garamond, 'Times New Roman', serif;
-            background: #f5f5f5;
-            width: 100vw;
-            box-sizing: border-box;
+            background: var(--primary-bg);
+            color: var(--text-color);
+            overflow-x: hidden;
         }
-
-        body {
+        
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
             min-height: 100vh;
-            min-width: 100vw;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            padding: 1rem;
         }
-
-        .center-btn {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100vw;
-            height: 100vh;
-        }
-
-        .big-btn {
-            border: none;
-            background: #fff;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
-            cursor: pointer;
-            transition: box-shadow 0.2s;
+        
+        .insult-card {
+            background: var(--card-bg);
+            border-radius: var(--card-radius);
+            box-shadow: 0 8px 30px var(--shadow-color);
+            width: 100%;
+            max-width: 800px;
+            height: auto;
+            min-height: 60vh;
+            max-height: 90vh;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
+            position: relative;
+            cursor: pointer;
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed), flex-direction var(--transition-speed);
+        }
+        
+        .insult-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px var(--shadow-color);
+        }
+        
+        .image-container {
+            flex: 3;
+            display: flex;
             justify-content: center;
             align-items: center;
-            width: 80vw;
-            height: 80vh;
-            max-width: 800px;
-            max-height: 800px;
-            min-width: 240px;
-            min-height: 240px;
-            box-sizing: border-box;
+            padding: 1.5rem;
             position: relative;
+            min-height: 200px;
+            transition: flex var(--transition-speed), padding var(--transition-speed);
         }
-
-        .big-btn:hover {
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
-        }
-
-        .big-btn img {
-            position: absolute;
-            top: 5%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: auto;
-            height: 65%;
-            max-height: 650px;
+        
+        .shakespeare-img {
+            max-height: 100%;
+            max-width: 100%;
             object-fit: contain;
-            margin: 0;
+            filter: drop-shadow(0 4px 12px var(--shadow-color));
+            transition: transform var(--transition-speed);
         }
-
-        .big-btn span {
-            display: block;
-            margin-top: auto;
-            padding-top: calc(85% + 40px);
-            font-size: clamp(3rem, 6vw, 4.5rem);
-            font-family: 'IM Fell English', Garamond, 'Times New Roman', serif;
-            font-style: italic;
-            line-height: 1.1;
-            letter-spacing: 0.02em;
+        
+        .insult-card:hover .shakespeare-img {
+            transform: scale(1.02);
+        }
+        
+        .insult-text {
+            padding: 1.5rem;
             text-align: center;
-            word-break: break-word;
-            padding: 0 10px;
-            color: #333333;
+            font-style: italic;
+            font-size: clamp(1.8rem, 5vw, 3.2rem);
+            line-height: 1.2;
+            position: relative;
+            min-height: 3.6em;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-color);
+            border-top: 1px solid rgba(139, 109, 63, 0.2);
+            background: linear-gradient(to bottom, rgba(248, 245, 230, 0), rgba(248, 245, 230, 0.3));
+            transition: flex var(--transition-speed), padding var(--transition-speed), min-height var(--transition-speed);
         }
-
-        @media (max-width: 600px), (max-height: 600px) {
-            .big-btn {
-                padding: 15px;
-                width: 95vw;
+        
+        .insult-text::before {
+            content: '"';
+            position: absolute;
+            left: 0.5rem;
+            top: 0.2rem;
+            font-size: 4rem;
+            color: var(--accent-color);
+            opacity: 0.2;
+        }
+        
+        .insult-text::after {
+            content: '"';
+            position: absolute;
+            right: 0.5rem;
+            bottom: 0.2rem;
+            font-size: 4rem;
+            color: var(--accent-color);
+            opacity: 0.2;
+        }
+        
+        /* Landscape orientation on phones and small tablets */
+        @media (max-width: 1024px) and (orientation: landscape) {
+            .insult-card {
+                flex-direction: row;
+                height: 80vh;
+                max-height: 500px;
+            }
+            
+            .image-container {
+                flex: 1;
+                padding: 1rem;
+                border-right: 1px solid rgba(139, 109, 63, 0.2);
+                border-bottom: none;
+            }
+            
+            .insult-text {
+                flex: 1;
+                border-top: none;
+                font-size: clamp(1.2rem, 3vw, 2rem);
+                padding: 1rem;
+                min-height: unset;
+            }
+        }
+        
+        @media (max-width: 768px) and (orientation: portrait) {
+            .insult-card {
+                height: auto;
+                min-height: 70vh;
+            }
+            
+            .image-container {
+                flex: 2;
+                padding: 1rem 1rem 0;
+            }
+            
+            .insult-text {
+                padding: 1rem;
+                min-height: 2.8em;
+                font-size: clamp(1.4rem, 4vw, 2.4rem);
+            }
+        }
+        
+        @media (max-width: 480px) and (orientation: portrait) {
+            .insult-card {
+                min-height: 60vh;
+                border-radius: calc(var(--card-radius) / 2);
+            }
+            
+            .image-container {
+                flex: 1.5;
+            }
+            
+            .insult-text {
+                font-size: clamp(1.2rem, 5vw, 2rem);
+                min-height: 2.4em;
+            }
+            
+            .insult-text::before,
+            .insult-text::after {
+                font-size: 2.5rem;
+            }
+        }
+        
+        /* Very tall devices */
+        @media (min-aspect-ratio: 2/3) and (max-aspect-ratio: 3/4) {
+            .image-container {
+                flex: 2;
+            }
+            
+            .insult-text {
+                flex: 1;
+            }
+        }
+        
+        /* Very wide devices */
+        @media (min-aspect-ratio: 16/9) {
+            .insult-card {
+                max-width: 1200px;
+                flex-direction: row;
                 height: 70vh;
-                min-width: 0;
-                min-height: 0;
             }
-            .big-btn img {
-                top: 4%;
-                height: 60%;
+            
+            .image-container {
+                flex: 1;
+                border-right: 1px solid rgba(139, 109, 63, 0.2);
+                border-bottom: none;
             }
-            .big-btn span {
-                padding-top: calc(75% + 25px);
-                font-size: 2.6rem;
+            
+            .insult-text {
+                flex: 1;
+                border-top: none;
             }
         }
     </style>
 </head>
 
 <body>
-    <div class="center-btn">
-        <button class="big-btn" type="button">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Hw-shakespeare.png/640px-Hw-shakespeare.png"
-                alt="Shakespeare">
-            <span>Darest thou presume to click upon my person?</span>
-        </button>
+    <div class="container">
+        <div class="insult-card">
+            <div class="image-container">
+                <img class="shakespeare-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Hw-shakespeare.png/640px-Hw-shakespeare.png" alt="Shakespeare">
+            </div>
+            <div class="insult-text">Darest thou presume to click upon my person?</div>
+        </div>
     </div>
     <script>
-        const button = document.querySelector('.big-btn');
-        const messageSpan = button.querySelector('span');
+        const card = document.querySelector('.insult-card');
+        const messageDiv = document.querySelector('.insult-text');
         let audio = null;
 
-        button.addEventListener('click', async () => {
+        card.addEventListener('click', async () => {
             // Show ellipsis while loading
-            messageSpan.textContent = '...';
+            messageDiv.textContent = '...';
             try {
                 const response = await fetch('/audio');
                 if (!response.ok) throw new Error('Network response was not ok');
@@ -128,13 +243,13 @@
                 const insultText = response.headers.get('X-Insult-Text') || 'Insult delivered!';
                 const audioBlob = await response.blob();
                 // Update message
-                messageSpan.textContent = insultText;
+                messageDiv.textContent = insultText;
                 // Play audio
                 if (audio) audio.pause();
                 audio = new Audio(URL.createObjectURL(audioBlob));
                 audio.play();
             } catch (err) {
-                messageSpan.textContent = 'Failed to fetch insult.';
+                messageDiv.textContent = 'Failed to fetch insult.';
             }
         });
     </script>
