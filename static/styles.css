@@ -201,6 +201,15 @@ html, body {
     }
 }
 
+@media (max-width: 480px) {
+    .ellipsis,
+    .ellipsis::after {
+        width: 2.5em;
+        font-size: 1.5em;
+        min-width: 2em;
+    }
+}
+
 /* Very tall devices */
 @media (min-aspect-ratio: 2/3) and (max-aspect-ratio: 3/4) {
     .image-container {
