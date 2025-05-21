@@ -23,7 +23,7 @@ def insult_audio():
     response = openai.audio.speech.create(
         model="gpt-4o-mini-tts",
         voice="ballad",
-        instructions="Imitate William Shakespeare insulting at a person",
+        instructions="Imitate William Shakespeare insulting a person",
         input=text,
         response_format="wav",
     )
