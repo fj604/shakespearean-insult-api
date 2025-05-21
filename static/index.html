@@ -25,10 +25,11 @@
         let audio = null;
 
         card.addEventListener('click', async () => {
-            // Show ellipsis while loading
-            messageDiv.textContent = '...';
+            // Show animated ellipsis while loading
+            messageDiv.innerHTML = '<span class="ellipsis"></span>';
             try {
                 const response = await fetch('/audio');
+                console.log('Response:', response);
                 if (!response.ok) throw new Error('Network response was not ok');
                 // Get custom header (e.g., X-Insult-Text)
                 const insultText = response.headers.get('X-Insult-Text') || 'Insult delivered!';

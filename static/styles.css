@@ -114,6 +114,30 @@ html, body {
     opacity: 0.2;
 }
 
+.ellipsis {
+    display: inline-block;
+    width: 1.5em;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.ellipsis::after {
+    content: '...';
+    display: inline-block;
+    width: 1.5em;
+    animation: ellipsis-steps 1s steps(4, end) infinite;
+    overflow: hidden;
+    vertical-align: middle;
+}
+
+@keyframes ellipsis-steps {
+    0% { width: 0; }
+    25% { width: 0.5em; }
+    50% { width: 1em; }
+    75% { width: 1.5em; }
+    100% { width: 0; }
+}
+
 /* Landscape orientation on phones and small tablets */
 @media (max-width: 1024px) and (orientation: landscape) {
     .insult-card {
