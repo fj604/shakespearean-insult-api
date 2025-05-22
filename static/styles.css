@@ -14,21 +14,42 @@
     padding: 0;
 }
 
-html, body {
-    height: 100%;
-    width: 100%;
+html {
+    height: 100%; /* For sticky footer */
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; 
     font-family: 'IM Fell English', Garamond, 'Times New Roman', serif;
     background: var(--primary-bg);
     color: var(--text-color);
-    overflow-x: hidden;
+    overflow-x: hidden; 
+    width: 100%; 
+}
+
+header {
+    background-color: var(--accent-color);
+    color: var(--primary-bg);
+    padding: 1rem 0;
+    text-align: center;
+    width: 100%;
+}
+
+header h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    margin: 0;
+    font-weight: normal;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
 }
 
 .container {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    padding: 1rem;
+    padding: 2rem 1rem; /* Adjusted padding */
+    flex-grow: 1; 
 }
 
 .insult-card {
@@ -46,6 +67,7 @@ html, body {
     position: relative;
     cursor: pointer;
     transition: transform var(--transition-speed), box-shadow var(--transition-speed), flex-direction var(--transition-speed);
+    margin-bottom: 2rem; /* Added margin-bottom */
 }
 
 .insult-card:hover {
@@ -60,7 +82,7 @@ html, body {
     align-items: center;
     padding: 2rem;
     position: relative;
-    min-height: 200px;
+    min-height: 200px; /* This seems fine for larger screens */
     transition: flex var(--transition-speed), padding var(--transition-speed);
 }
 
@@ -83,7 +105,7 @@ html, body {
     font-size: clamp(1.8rem, 5vw, 3.2rem);
     line-height: 1.2;
     position: relative;
-    min-height: 3.6em;
+    min-height: 3.6em; /* This seems fine for larger screens */
     flex: 1;
     display: flex;
     align-items: center;
@@ -138,12 +160,37 @@ html, body {
     100% { width: 0; }
 }
 
+footer {
+    background-color: #e0dcd1; 
+    color: var(--text-color);
+    padding: 1rem 0;
+    text-align: center;
+    font-size: 0.9rem;
+    border-top: 1px solid rgba(0,0,0,0.1);
+    width: 100%;
+}
+
+footer a {
+    color: var(--accent-color);
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+/* ====== MEDIA QUERIES ====== */
+
 /* Landscape orientation on phones and small tablets */
 @media (max-width: 1024px) and (orientation: landscape) {
+    .container {
+        padding: 1rem; /* Revert to less horizontal padding for tablets */
+    }
     .insult-card {
         flex-direction: row;
-        height: 80vh;
-        max-height: 500px;
+        height: 80vh; /* This might be too much with header/footer, consider reducing if needed */
+        max-height: 500px; /* Caps the height */
+        min-height: unset; /* Allow content to define height more freely in landscape */
     }
     
     .image-container {
@@ -151,92 +198,115 @@ html, body {
         padding: 1rem;
         border-right: 1px solid rgba(139, 109, 63, 0.2);
         border-bottom: none;
+        min-height: unset; /* Allow flex to manage height */
     }
     
     .insult-text {
         flex: 1;
         border-top: none;
-        font-size: clamp(1.2rem, 3vw, 2rem);
+        font-size: clamp(1.2rem, 2.5vw, 1.8rem); /* Slightly reduced max font size */
         padding: 1rem;
-        min-height: unset;
+        min-height: unset; /* Allow content to define height */
     }
 }
 
 @media (max-width: 768px) and (orientation: portrait) {
+    .container {
+        padding: 1rem; /* Revert to less horizontal padding */
+    }
     .insult-card {
-        height: auto;
-        min-height: 70vh;
+        min-height: 60vh; /* Keeping this for now, may adjust if 480px changes are not enough */
+        max-height: 85vh; /* Slightly reduce max height */
     }
     
     .image-container {
-        flex: 2;
+        flex: 2; /* Keep ratio for portrait on medium screens */
         padding: 1rem 1rem 0;
+        min-height: 150px; /* Reduce min-height */
     }
     
     .insult-text {
-        padding: 1rem;
-        min-height: 2.8em;
-        font-size: clamp(1.4rem, 4vw, 2.4rem);
+        padding: 1.5rem; /* Adjust padding */
+        min-height: 3em; /* Adjust min-height */
+        font-size: clamp(1.4rem, 4.5vw, 2.6rem); /* Adjust font size */
     }
 }
 
 @media (max-width: 480px) and (orientation: portrait) {
+    .container {
+        padding: 1rem 0.5rem; /* Further reduce padding for very small screens */
+    }
+    header h1 {
+        font-size: clamp(1.8rem, 6vw, 2.5rem); /* Reduce header font size */
+    }
     .insult-card {
-        min-height: 60vh;
-        border-radius: calc(var(--card-radius) / 2);
+        min-height: 50vh; /* Reduced min-height */
+        max-height: 80vh; /* Further reduce max-height */
+        border-radius: calc(var(--card-radius) / 1.5); /* Slightly smaller radius */
+        margin-bottom: 1rem; /* Reduce margin for smaller screens */
     }
     
     .image-container {
-        flex: 1.5;
+        flex: 1.5; /* Adjust flex ratio */
+        padding: 0.5rem; /* Reduce padding */
+        min-height: 120px; /* Reduce min-height for image */
     }
     
     .insult-text {
-        font-size: clamp(1.2rem, 5vw, 2rem);
-        min-height: 2.4em;
+        font-size: clamp(1.1rem, 4.5vw, 1.8rem); /* Reduced font size */
+        min-height: 2.5em; /* Reduced min-height for text */
+        padding: 1rem 0.5rem; /* Reduce padding */
     }
     
     .insult-text::before,
     .insult-text::after {
-        font-size: 2.5rem;
+        font-size: 2.5rem; /* Reduce quote mark size */
+    }
+    footer {
+        padding: 0.75rem 0;
+        font-size: 0.8rem;
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 480px) { /* Applies to both portrait and landscape on small screens */
     .ellipsis,
     .ellipsis::after {
-        width: 2.5em;
-        font-size: 1.5em;
-        min-width: 2em;
+        /* Ensure ellipsis doesn't become too large relative to smaller text */
+        font-size: 1.2em; 
     }
 }
 
-/* Very tall devices */
-@media (min-aspect-ratio: 2/3) and (max-aspect-ratio: 3/4) {
-    .image-container {
-        flex: 2;
+/* Very tall devices (e.g. iPhone X aspect ratio and taller) */
+@media (min-aspect-ratio: 9/19.5) { /* Approx. iPhone X/XS/11 Pro/12 Mini/13 Mini */
+     .container {
+        padding: 1rem 0.5rem; /* Ensure padding isn't too wide */
     }
-    
-    .insult-text {
-        flex: 1;
+    .insult-card {
+        min-height: 55vh; /* Adjust for very tall screens */
     }
 }
+
 
 /* Very wide devices */
 @media (min-aspect-ratio: 16/9) {
     .insult-card {
-        max-width: 1200px;
+        max-width: 1000px; /* Allow slightly wider card on very wide screens */
         flex-direction: row;
-        height: 70vh;
+        min-height: unset; /* Unset min-height, let content and max-height define it */
+        height: 70vh; /* Keep consistent height for wide layout */
+        max-height: 600px; /* Cap max height */
     }
     
     .image-container {
         flex: 1;
         border-right: 1px solid rgba(139, 109, 63, 0.2);
         border-bottom: none;
+        min-height: unset;
     }
     
     .insult-text {
         flex: 1;
         border-top: none;
+        min-height: unset;
     }
 }
