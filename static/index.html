@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shakespearean Insults</title>
+    <link rel="icon" type="image/png" href="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Hw-shakespeare.png/640px-Hw-shakespeare.png">
+    <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="insult-card">
+            <div class="image-container">
+                <img class="shakespeare-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Hw-shakespeare.png/640px-Hw-shakespeare.png" alt="Shakespeare">
+            </div>
+            <div class="insult-text">Darest thou presume to click upon my person?</div>
+        </div>
+    </div>
+    <script>
+        const card = document.querySelector('.insult-card');
+        const messageDiv = document.querySelector('.insult-text');
+        let audio = null;
+
+        card.addEventListener('click', async () => {
+            // Show animated ellipsis while loading
+            messageDiv.innerHTML = '<span class="ellipsis"></span>';
+            try {
+                const response = await fetch('/audio');
+                console.log('Response:', response);
+                if (!response.ok) throw new Error('Network response was not ok');
+                // Get custom header (e.g., X-Insult-Text)
+                const insultText = response.headers.get('X-Insult-Text') || 'Insult delivered!';
+                const audioBlob = await response.blob();
+                // Update message
+                messageDiv.textContent = insultText;
+                // Play audio
+                if (audio) audio.pause();
+                audio = new Audio(URL.createObjectURL(audioBlob));
+                audio.play();
+            } catch (err) {
+                messageDiv.textContent = 'Failed to fetch insult.';
+            }
+        });
+    </script>
+</body>
+
+</html>
