@@ -2,7 +2,6 @@ import insult
 from flask import Flask, send_file, Response
 from flask_cors import CORS
 import openai
-import io
 
 # Configure Flask to serve static files from the 'static' directory at root URL
 app = Flask(__name__, static_folder='static', static_url_path='/')
