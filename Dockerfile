@@ -8,4 +8,4 @@ RUN pip3 install -r requirements.txt
 COPY . .
 
 EXPOSE 8000
-CMD ["gunicorn", "-w" , "4", "--bind", "0.0.0.0:8000", "app:app"]
+CMD ["gunicorn", "-w" , "4", "--preload", "--bind", "0.0.0.0:8000", "app:app"]
