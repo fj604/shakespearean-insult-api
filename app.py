@@ -19,16 +19,26 @@ def return_insult():
 @app.route("/audio")
 def insult_audio():
     text = insult.insult()
-    response = openai.audio.speech.create(
-        model="gpt-4o-mini-tts",
-        voice="ballad",
-        instructions="Imitate William Shakespeare insulting a person",
-        input=text,
-        response_format="wav",
-    )
-    audio_bytes = response.content
-    resp = Response(audio_bytes, mimetype="audio/wav")
+    
+    def generate_audio():
+        try:
+            with openai.audio.speech.with_streaming_response.create(
+                model="gpt-4o-mini-tts",
+                voice="ballad",
+                instructions="Imitate William Shakespeare insulting a person",
+                input=text,
+                response_format="wav",
+            ) as response:
+                for chunk in response.iter_bytes():
+                    yield chunk
+        except Exception as e:
+            # In case of API errors, we could fall back to an error message
+            # For now, re-raise to let Flask handle it
+            raise e
+    
+    resp = Response(generate_audio(), mimetype="audio/wav")
     resp.headers["X-Insult-Text"] = text
+    resp.headers["Transfer-Encoding"] = "chunked"
     return resp
 
 if __name__ == '__main__':
