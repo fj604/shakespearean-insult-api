@@ -30,6 +30,7 @@ def insult_audio():
                 response_format="wav",
             ) as response:
                 for chunk in response.iter_bytes():
+                    print(f"Received chunk of {len(chunk)} bytes")
                     yield chunk
         except Exception as e:
             # In case of API errors, we could fall back to an error message
