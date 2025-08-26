@@ -18,6 +18,7 @@ jobs:
     env:
       APP_NAME: flask-service
       RUNNER_TOOL_CACHE: /opt/hostedtoolcache
+      PYTHONUNBUFFERED: true
 
     steps:
     - uses: actions/checkout@v4
@@ -32,4 +33,4 @@ jobs:
 
     - name: Run new container
       run: |
-        docker run -d --name ${{ env.APP_NAME }} --restart unless-stopped -p 18000:8000 -e OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} ${{ env.APP_NAME }}:latest
+        docker run -d --name ${{ env.APP_NAME }} --restart unless-stopped -p 18000:8000 -e OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} -e PYTHONUNBUFFERED=${{ env.PYTHONUNBUFFERED }} ${{ env.APP_NAME }}:latest

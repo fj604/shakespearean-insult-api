@@ -19,6 +19,7 @@ def return_insult():
 @app.route("/audio")
 def insult_audio():
     text = insult.insult()
+    print(f"Generating audio for insult: {text}")
     
     def generate_audio():
         try:
