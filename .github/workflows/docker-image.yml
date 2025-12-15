@@ -19,6 +19,7 @@ jobs:
       APP_NAME: flask-service
       RUNNER_TOOL_CACHE: /opt/hostedtoolcache
       PYTHONUNBUFFERED: true
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
     steps:
     - uses: actions/checkout@v4
@@ -31,6 +32,15 @@ jobs:
         docker stop ${{ env.APP_NAME }} || true
         docker rm ${{ env.APP_NAME }} || true
 
-    - name: Run new container
+    - name: Validate OPENAI_API_KEY is available
+      if: github.event_name == 'push'
       run: |
-        docker run -d --name ${{ env.APP_NAME }} --restart unless-stopped -p 18000:8000 -e OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} -e PYTHONUNBUFFERED=${{ env.PYTHONUNBUFFERED }} ${{ env.APP_NAME }}:latest
+        if [ -z "$OPENAI_API_KEY" ]; then
+          echo "OPENAI_API_KEY is empty or not configured for this workflow run."
+          exit 1
+        fi
+
+    - name: Run new container
+      if: github.event_name == 'push'
+      run: |
+        docker run -d --name ${{ env.APP_NAME }} --restart unless-stopped -p 18000:8000 --env OPENAI_API_KEY="$OPENAI_API_KEY" --env PYTHONUNBUFFERED="${{ env.PYTHONUNBUFFERED }}" ${{ env.APP_NAME }}:latest
