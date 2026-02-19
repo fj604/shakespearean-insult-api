@@ -29,8 +29,11 @@ jobs:
   
     - name: Stop and remove old container
       run: |
-        docker stop ${{ env.APP_NAME }} || true
-        docker rm ${{ env.APP_NAME }} || true
+        if docker container inspect "${{ env.APP_NAME }}" >/dev/null 2>&1; then
+          docker rm -f "${{ env.APP_NAME }}"
+        else
+          echo "No existing container named ${{ env.APP_NAME }} found."
+        fi
 
     - name: Validate OPENAI_API_KEY is available
       if: github.event_name == 'push'
