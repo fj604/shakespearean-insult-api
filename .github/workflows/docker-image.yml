@@ -36,14 +36,31 @@ jobs:
         fi
 
     - name: Validate OPENAI_API_KEY is available
-      if: github.event_name == 'push'
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       run: |
         if [ -z "$OPENAI_API_KEY" ]; then
           echo "OPENAI_API_KEY is empty or not configured for this workflow run."
           exit 1
         fi
 
-    - name: Run new container
-      if: github.event_name == 'push'
+    - name: Deploy with docker compose
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      env:
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       run: |
-        docker run -d --name ${{ env.APP_NAME }} --restart unless-stopped -p 18000:8000 --env OPENAI_API_KEY="$OPENAI_API_KEY" --env PYTHONUNBUFFERED="${{ env.PYTHONUNBUFFERED }}" ${{ env.APP_NAME }}:latest
+        docker compose up -d --force-recreate --remove-orphans
+
+    - name: Smoke check deployed service
+        echo "Waiting for service to become ready on http://127.0.0.1:18000/insult ..."
+        for i in {1..10}; do
+          if curl --fail --silent --show-error http://127.0.0.1:18000/insult >/dev/null; then
+            echo "Smoke check succeeded on attempt $i."
+            exit 0
+          fi
+          echo "Attempt $i failed; retrying in 3 seconds..."
+          sleep 3
+        done
+        echo "Service did not become ready in time; failing smoke check."
+        exit 1
+      run: |
+        curl --fail --silent --show-error http://127.0.0.1:18000/insult >/dev/null
