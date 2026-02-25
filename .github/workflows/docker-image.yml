@@ -51,9 +51,11 @@ jobs:
         docker compose up -d --force-recreate --remove-orphans
 
     - name: Smoke check deployed service
-        echo "Waiting for service to become ready on http://127.0.0.1:18000/insult ..."
-        for i in {1..10}; do
-          if curl --fail --silent --show-error http://127.0.0.1:18000/insult >/dev/null; then
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      run: |
+        echo "Waiting for service to become ready on http://localhost:18000/insult ..."
+        for i in {1..20}; do
+          if curl --fail --silent --show-error http://localhost:18000/insult >/dev/null; then
             echo "Smoke check succeeded on attempt $i."
             exit 0
           fi
@@ -62,5 +64,3 @@ jobs:
         done
         echo "Service did not become ready in time; failing smoke check."
         exit 1
-      run: |
-        curl --fail --silent --show-error http://127.0.0.1:18000/insult >/dev/null
