@@ -22,7 +22,7 @@ jobs:
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
 
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag ${{ env.APP_NAME }}:latest
